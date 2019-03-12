@@ -2,6 +2,12 @@ import prime
 import random
 from math import gcd
 
+"""
+Implmentation of the extended gcd algorithm.
+
+Input: Numbers a and b
+Output: g, x, and y of the egcd algorithm
+"""
 def egcd(a, b):
     if a == 0:
         return b, 0, 1
@@ -9,11 +15,29 @@ def egcd(a, b):
         g, y, x = egcd(b % a, a)
         return g, x - (b // a) * y, y
 
+"""
+Multiplicative inverse of two numbers e and phi.
+Outputs number b such that b*e%phi is equal to 1.
+
+Input: Numbers e and phi
+Output: Multiplicative inverse
+"""
 def multiplicative_inverse(e, phi):
     g, x, y = egcd(e, phi)
     if g == 1:
         return x % phi
 
+"""
+Outputs valid keypair for RSA.
+1. Send random primes p and q to RSA key generation.
+2. Check if RSA keygeneration led to a valid key pair.
+3. Go back to #1 if not so.
+4. Return valid keypair.
+
+
+Input: Bitlength of keys
+Output: Public (key1) and Private (key2) keys
+"""
 def generate_keys(num_bits):
     valid_keypair = False
     while not valid_keypair:
@@ -28,6 +52,19 @@ def generate_keys(num_bits):
         valid_keypair = not(None in key1 or None in key2) and n > pow(2, num_bits)
     return key1, key2
 
+"""
+Outputs valid keypair for RSA given prime numbers p and q.
+1. Calculates the totient (called phi in the code) of p and q: tot(p, q) = (p-1)*(q-1)
+2. Calculates n which is p*q
+3. Finds a random number e between 1 and phi.
+4. Check if e is coprime with phi. Repeat #3 until it is.
+5. Find d, the multiplicative inverse of e mod phi. (NOTE that this may be None if not possible.)
+6. Set public key to be (e, n)
+7. Set private key to (d, n)
+
+Input: Bitlength of keys
+Output: Public (key1) and Private (key2) keys
+"""
 def generate_keypair(p, q):
     if not (prime.isPrime(p) and prime.isPrime(q)):
         raise ValueError('Both numbers must be prime.')
@@ -54,10 +91,24 @@ def generate_keypair(p, q):
     #Public key is (e, n) and private key is (d, n)
     return ((e, n), (d, n))
 
+"""
+Encrypts message into ciphertext.
+Ciphertext = Message^e % n
+
+Input: Public key (pk) and the message (plaintext)
+Output: Ciphertext
+"""
 def encrypt(pk, plaintext):
     e, n = pk
     return pow(plaintext, e, n)
 
+"""
+Decrypts ciphertext into message.
+Message = Ciphertext^d % n = Message^(ed) % n = Message % n
+
+Input: Private key (pk) and the ciphertext
+Output: Plaintext/Message
+"""
 def decrypt(pk, ciphertext):
     d, n = pk
     return pow(ciphertext, d, n)
