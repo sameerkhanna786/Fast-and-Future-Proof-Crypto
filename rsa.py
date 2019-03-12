@@ -72,7 +72,7 @@ while result:
     e, n = public
     encrypted_msg = encrypt(private, plaintext)
     plaintxt = decrypt(public, encrypted_msg)
-    result = plaintext == plaintxt
+    result = plaintext == plaintxt and encrypted_msg < n
     if not result:
         print(plaintext, plaintxt)
     counter += 1
@@ -80,4 +80,24 @@ while result:
         print(counter)
     if counter > 1000000:
         break
+"""
+"""
+#SPEED TESTING SCHEME
+import time
+
+key_size = 128
+while key_size < 1000000:
+    start_time = time.time()
+    plain_size = 128
+    plaintext = random.getrandbits(plain_size)
+    public, private = generate_keys(key_size)
+    e, n = public
+    encrypted_msg = encrypt(private, plaintext)
+    plaintxt = decrypt(public, encrypted_msg)
+    result = plaintext == plaintxt
+    if not result:
+        print(plaintext, plaintxt)
+    else:
+        print("Time it took to create keys, encrypt, and then decrypt " + str(plain_size) + " bits using " + str(key_size) + " bit keys: ", time.time() - start_time)
+    key_size *= 2
 """
