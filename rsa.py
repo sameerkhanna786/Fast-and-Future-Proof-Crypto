@@ -79,7 +79,7 @@ def generate_keypair(p, q):
     #Choose an integer e such that e and phi(n) are coprime
     e = int(random.randint(1, phi))
 
-    #Use Euclid's Algorithm to verify that e and phi(n) are comprime
+    #Use Euclid's Algorithm to verify that e and phi(n) are coprime
     g = gcd(e, phi)
     while g != 1:
         e = int(random.randint(1, phi))
